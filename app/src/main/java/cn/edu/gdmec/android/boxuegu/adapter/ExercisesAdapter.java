@@ -84,7 +84,7 @@ public class ExercisesAdapter extends BaseAdapter {
                     //把章节ID传递到习题详情页面
                     intent.putExtra("id",bean.id);
                     //把标题传递到习题详情页面
-                    intent.putExtra("title",bean.titel);
+                    intent.putExtra("title",bean.title);
                     mContext.startActivity(intent);
 
             }
