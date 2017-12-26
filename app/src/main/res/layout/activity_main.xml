@@ -87,7 +87,7 @@
                android:layout_alignParentTop="true"
                android:layout_centerHorizontal="true"
                android:layout_marginTop="3dp"
-               android:src="@drawable/main_course_icon"
+               android:src="@drawable/main_exercises_icon"
                />
        </RelativeLayout>
         <RelativeLayout
@@ -116,7 +116,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="3dp"
-                android:src="@drawable/main_course_icon"
+                android:src="@drawable/main_my_icon"
                 />
         </RelativeLayout>
     </LinearLayout>
