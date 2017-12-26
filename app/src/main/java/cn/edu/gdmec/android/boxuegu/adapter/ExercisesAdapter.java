@@ -50,21 +50,21 @@ public class ExercisesAdapter extends BaseAdapter {
     //得到相应position对应的item视图，position是当前item的位置
     //convertView参数就是滚出屏幕的Item的View
     @Override
-     public View getView(int position, View convertView, ViewGroup parent){
-          final  ViewHolder vh;
-         //复用convertView
-         if(convertView == null){
-             vh = new ViewHolder();
-             convertView = LayoutInflater.from(mContext).inflate(R.layout.exercises_list_item,null);
-             vh.title = (TextView) convertView.findViewById(R.id.tv_title);
-             vh.content = (TextView) convertView.findViewById(R.id.tv_content);
-             vh.order = (TextView) convertView.findViewById(R.id.tv_order);
-             convertView.setTag(vh);
+    public View getView(int position, View convertView, ViewGroup parent){
+        final  ViewHolder vh;
+        //复用convertView
+        if(convertView == null){
+            vh = new ViewHolder();
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.exercises_list_item,null);
+            vh.title = (TextView) convertView.findViewById(R.id.tv_title);
+            vh.content = (TextView) convertView.findViewById(R.id.tv_content);
+            vh.order = (TextView) convertView.findViewById(R.id.tv_order);
+            convertView.setTag(vh);
 
-         }else{
-             vh = (ViewHolder) convertView.getTag();
-         }
-         //获取position对应的item的数据对象
+        }else{
+            vh = (ViewHolder) convertView.getTag();
+        }
+        //获取position对应的item的数据对象
         final  ExercisesBean bean = getItem(position);
         if(bean != null){
             vh.order.setText(position + 1 + "");
@@ -73,19 +73,19 @@ public class ExercisesAdapter extends BaseAdapter {
             vh.order.setBackgroundResource(bean.background);
 
         }
-    //每个item的点击事件
+        //每个item的点击事件
         convertView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 if(bean == null)
                     return;
-                    //跳转到习题详情界面
-                    Intent intent  = new Intent(mContext, ExercisesDetailActivity.class);
-                    //把章节ID传递到习题详情页面
-                    intent.putExtra("id",bean.id);
-                    //把标题传递到习题详情页面
-                    intent.putExtra("title",bean.title);
-                    mContext.startActivity(intent);
+                //跳转到习题详情界面
+                Intent intent  = new Intent(mContext,ExercisesDetailActivity.class);
+                //把章节ID传递到习题详情页面
+                intent.putExtra("id",bean.id);
+                //把标题传递到习题详情页面
+                intent.putExtra("title",bean.title);
+                mContext.startActivity(intent);
 
             }
         });
