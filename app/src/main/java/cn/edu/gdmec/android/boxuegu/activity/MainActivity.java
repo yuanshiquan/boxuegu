@@ -1,8 +1,11 @@
 package cn.edu.gdmec.android.boxuegu.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -12,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import cn.edu.gdmec.android.boxuegu.R;
 import cn.edu.gdmec.android.boxuegu.view.ExerciseView;
@@ -23,10 +27,11 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
       private FrameLayout mBodyLayout;
     //   底部按钮栏
     public LinearLayout mBottomLayout;
-     //底部按钮
-     private View mCourseBtn;
+     //底部按钮private View mCourseBtn;
+
     private View mExercisesBtn;
     private View mMyInfoBtn;
+    private View mCourseBtn;
     private TextView tv_course;
     private TextView tv_exercises;
     private TextView tv_myInfo;
@@ -58,7 +63,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         rl_title_bar = (RelativeLayout) findViewById(R.id.title_bar);
         rl_title_bar.setBackgroundColor(Color.parseColor("#30B4FF"));
         tv_back.setVisibility(View.GONE);
-        //initBodyLayout();
+        initBodyLayout();
     }
   //获取导航栏的控件
     private void initBottomBar(){
@@ -75,6 +80,10 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
 
     }
+    private void initBodyLayout(){
+        mBodyLayout = (FrameLayout) findViewById(R.id.main_body);
+    }
+      @Override
        public  void onClick(View v){
             switch (v.getId()){
                 // 课程的点击事件
@@ -118,7 +127,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
      }
      //  设置地步按钮的选中状态
 
-     public void setSelectStatus( int index){
+     public void setSelectedStatus( int index){
        switch (index){
            case 0:
           mCourseBtn.setSelected(true);
@@ -128,14 +137,14 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                tv_main_title.setText("博学谷课程");
                break;
            case 1:
-               mCourseBtn.setSelected(true);
+               mExercisesBtn.setSelected(true);
                iv_exercises.setImageResource(R.drawable.main_exercises_icon_selected);
                tv_exercises.setTextColor(Color.parseColor("#0097F7"));
                rl_title_bar.setVisibility(View.VISIBLE);
                tv_main_title.setText("博学谷习题");
                break;
            case 2:
-               mCourseBtn.setSelected(true);
+               mMyInfoBtn.setSelected(true);
                iv_myInfo.setImageResource(R.drawable.main_my_icon_selected);
                tv_myInfo.setTextColor(Color.parseColor("#0097F7"));
                rl_title_bar.setVisibility(View.GONE);
@@ -146,32 +155,41 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
      }
      //移除不需要的视图
      private void removeAllView(){
-         for(int i=0;i<mBottomLayout.getChildCount();i++){
-             mBottomLayout.getChildAt(i).setVisibility(View.GONE);
+         for(int i=0;i<mBodyLayout.getChildCount();i++){
+             mBodyLayout.getChildAt(i).setVisibility(View.GONE);
          }
      }
      //设置界面view 的初始化状态
      private void setInitStatus(){
          clearBottomImageState();
-         setSelectStatus(0);
+         setSelectedStatus(0);
          createView(0);
      }
      //显示对应的页面
      private void selectDisplayView(int index){
          removeAllView();
          createView(index);
-         setSelectStatus(index);
+         setSelectedStatus(index);
      }
      //选择视图
 
     private void createView(int viewIndex){
         switch (viewIndex){
             case 0:
+                 //课程界面
+//                if(mCourseView == null){
+//                    mCourseBtn = new CourseView(this);
+//                    mBodyLayout.addView(mCourseView());
+//                }else{
+//                    mCourseView.getView();
+//
+//                }
+//                mCourseView.showView();
                   break;
             case 1:
                 if (mExercisesView == null){
                     mExercisesView = new ExerciseView(this);
-                    mBottomLayout.addView(mExercisesView.getView());
+                    mBodyLayout.addView(mExercisesView.getView());
                 }else{
                     mExercisesView.getView();
 
@@ -179,6 +197,16 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                 mExercisesView.showView();
                 break;
             case 2:
+                //我的界面
+                //课程界面
+//                if(mMyInfoView == null){
+//                    mMyInfoView = new MyInfoView(this);
+//                    mBodyLayout.addView(mMyInfoView());
+//                }else{
+//                    mMyInfoView.getView();
+//
+//                }
+//                mMyInfoView.showView();
                 break;
         }
     }
@@ -198,11 +226,42 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     protected  long exitTime;//记录第一次点击的时间
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event){
+        if(keyCode == KeyEvent.KEYCODE_BACK&&event.getAction()==KeyEvent.ACTION_DOWN){
+            if((System.currentTimeMillis()-exitTime)>2000){
+                Toast.makeText(MainActivity.this,"再按一下退出博学谷",Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
 
 
+            }else{
+                MainActivity.this.finish();
+                if(readLoginStatus()){
+                    //如果退出应用时是登录状态，这需要清除登录状态，同时需清除登录时的用户名
+                    clearLoginStatus();
+                }
+                System.exit(0);
+            }
+            return true;
 
-        return true;
+
+        }
+
+
+        return super.onKeyDown(keyCode, event);
     }
+   //获取SharedPreFerences中的登录状态
+    private  boolean readLoginStatus(){
+        SharedPreferences sp = getSharedPreferences("loginInfo", Context.MODE_PRIVATE);
+        boolean isLogin = sp.getBoolean("isLogin",false);
+        return  isLogin;
 
+    }
+    //清除SharedPreferences的登录状态
+    private  void clearLoginStatus(){
+        SharedPreferences sp = getSharedPreferences("loginInfo",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor  =sp.edit();//获取编辑器
+        editor.putBoolean("isLogin",false);//清除登录状态
+        editor.putString("loginUserName","");//清除登录时的用户名
+        editor.commit();//提交修改
+    }
 
 }
