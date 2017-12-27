@@ -33,18 +33,18 @@ public class ExercisesDetailAdapter extends BaseAdapter{
 
         this.onSelectListener = onSelectListener;
     }
-    public void setData(List<ExercisesBean>ebl){
+    public void setData(List<ExercisesBean> ebl){
         this.ebl = ebl;
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return ebl == null ? 0:ebl.size();
+        return ebl == null ? 0 : ebl.size();
     }
 
     @Override
-    public Object getItem(int position) {
+    public ExercisesBean getItem(int position) {
         return ebl == null? null:ebl.get(position);
     }
 
@@ -73,7 +73,7 @@ public class ExercisesDetailAdapter extends BaseAdapter{
         }else{
             vh=(ViewHolder) convertView.getTag();
         }
-        ExercisesBean bean = (ExercisesBean) getItem(position);
+        final ExercisesBean bean = (ExercisesBean) getItem(position);
         if(bean!=null){
               vh.subject.setText(bean.subject);
             vh.tv_a.setText(bean.a);
@@ -96,21 +96,24 @@ public class ExercisesDetailAdapter extends BaseAdapter{
                         vh.iv_c.setImageResource(R.drawable.exercises_c);
                         vh.iv_d.setImageResource(R.drawable.exercises_d);
                     }else if(bean.answer == 2){
-                        vh.iv_b.setImageResource(R.drawable.exercises_right_icon);
+
                         vh.iv_a.setImageResource(R.drawable.exercises_a);
+                        vh.iv_b.setImageResource(R.drawable.exercises_right_icon);
                         vh.iv_c.setImageResource(R.drawable.exercises_c);
                         vh.iv_d.setImageResource(R.drawable.exercises_d);
 
                     }else if (bean.answer ==3){
-                        vh.iv_c.setImageResource(R.drawable.exercises_right_icon);
+
                         vh.iv_a.setImageResource(R.drawable.exercises_a);
                         vh.iv_b.setImageResource(R.drawable.exercises_b);
+                        vh.iv_c.setImageResource(R.drawable.exercises_right_icon);
                         vh.iv_d.setImageResource(R.drawable.exercises_d);
                     }else if (bean.answer ==4){
-                        vh.iv_d.setImageResource(R.drawable.exercises_right_icon);
+
                         vh.iv_a.setImageResource(R.drawable.exercises_a);
                         vh.iv_b.setImageResource(R.drawable.exercises_b);
                         vh.iv_c.setImageResource(R.drawable.exercises_c);
+                        vh.iv_d.setImageResource(R.drawable.exercises_right_icon);
                     }
                     break;
                 case 1:
@@ -123,13 +126,15 @@ public class ExercisesDetailAdapter extends BaseAdapter{
                         vh.iv_d.setImageResource(R.drawable.exercises_d);
 
                     }else if (bean.answer ==3){
-                        vh.iv_c.setImageResource(R.drawable.exercises_right_icon);
+
                         vh.iv_b.setImageResource(R.drawable.exercises_b);
+                        vh.iv_c.setImageResource(R.drawable.exercises_right_icon);
                         vh.iv_d.setImageResource(R.drawable.exercises_d);
                     }else if (bean.answer ==4){
-                        vh.iv_d.setImageResource(R.drawable.exercises_right_icon);
+
                         vh.iv_b.setImageResource(R.drawable.exercises_b);
                         vh.iv_c.setImageResource(R.drawable.exercises_c);
+                        vh.iv_d.setImageResource(R.drawable.exercises_right_icon);
                     }
                     break;
                 case 2:
