@@ -14,6 +14,7 @@ import java.util.List;
 
 import cn.edu.gdmec.android.boxuegu.R;
 import cn.edu.gdmec.android.boxuegu.bean.ExercisesBean;
+import cn.edu.gdmec.android.boxuegu.utils.AnalysisUtils;
 
 
 /**
@@ -21,17 +22,12 @@ import cn.edu.gdmec.android.boxuegu.bean.ExercisesBean;
  */
 
 public class ExercisesDetailAdapter extends BaseAdapter{
-    private Context mContext;
+    private Context mContent;
     private List<ExercisesBean> ebl;
-    private  OnSelectListener onSelectListener;
-
-
-
-
-    public ExercisesDetailAdapter(Context mContext, OnSelectListener onSelectListener) {
-        this.mContext = mContext;
-
-        this.onSelectListener = onSelectListener;
+    private OnSelectListener onSelectListener;
+    public ExercisesDetailAdapter(Context context,OnSelectListener OnSelectListener){
+        this.mContent = context;
+        this.onSelectListener = OnSelectListener;
     }
     public void setData(List<ExercisesBean> ebl){
         this.ebl = ebl;
@@ -45,71 +41,69 @@ public class ExercisesDetailAdapter extends BaseAdapter{
 
     @Override
     public ExercisesBean getItem(int position) {
-        return ebl == null? null:ebl.get(position);
+        return ebl == null ? null : ebl.get(position);
     }
 
     @Override
     public long getItemId(int position) {
         return position;
     }
-   //记录点击的位置
-    private ArrayList<String> selectedPosition = new ArrayList<String>();
+    private ArrayList<String> selectedPosition = new ArrayList<String>();//记录点击的位置
     @Override
-    public View getView(final int position, View convertView, ViewGroup viewGroup) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder vh;
-        if(convertView == null){
+        if (convertView == null){
             vh = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.exercises_detail_list_item,null);
-            vh.subject=convertView.findViewById(R.id.tv_subject);
-            vh.tv_a= convertView.findViewById(R.id.tv_a);
-            vh.tv_b= convertView.findViewById(R.id.tv_b);
-            vh.tv_c= convertView.findViewById(R.id.tv_c);
-            vh.tv_d= convertView.findViewById(R.id.tv_d);
-            vh.iv_a = convertView.findViewById(R.id.iv_a);
-            vh.iv_b = convertView.findViewById(R.id.iv_b);
-            vh.iv_c = convertView.findViewById(R.id.iv_c);
-
+            convertView = LayoutInflater.from(mContent).inflate(R.layout.exercises_detail_list_item,null);
+            vh.subject = (TextView) convertView.findViewById(R.id.tv_subject);
+            vh.tv_a = (TextView) convertView.findViewById(R.id.tv_a);
+            vh.tv_b = (TextView) convertView.findViewById(R.id.tv_b);
+            vh.tv_c = (TextView) convertView.findViewById(R.id.tv_c);
+            vh.tv_d = (TextView) convertView.findViewById(R.id.tv_d);
+            vh.iv_a = (ImageView) convertView.findViewById(R.id.iv_a);
+            vh.iv_b = (ImageView) convertView.findViewById(R.id.iv_b);
+            vh.iv_c = (ImageView) convertView.findViewById(R.id.iv_c);
+            vh.iv_d = (ImageView) convertView.findViewById(R.id.iv_d);
             convertView.setTag(vh);
-        }else{
-            vh=(ViewHolder) convertView.getTag();
+        }else {
+            vh = (ViewHolder) convertView.getTag();
         }
-        final ExercisesBean bean = (ExercisesBean) getItem(position);
-        if(bean!=null){
-              vh.subject.setText(bean.subject);
+        final ExercisesBean bean = getItem(position);
+
+        if (bean != null){
+            vh.subject.setText(bean.subject);
             vh.tv_a.setText(bean.a);
             vh.tv_b.setText(bean.b);
             vh.tv_c.setText(bean.c);
             vh.tv_d.setText(bean.d);
-
         }
-        if(!selectedPosition.contains(""+position)){
+        if (!selectedPosition.contains("" + position)){
             vh.iv_a.setImageResource(R.drawable.exercises_a);
             vh.iv_b.setImageResource(R.drawable.exercises_b);
             vh.iv_c.setImageResource(R.drawable.exercises_c);
             vh.iv_d.setImageResource(R.drawable.exercises_d);
+            AnalysisUtils.setABCDEnable(true,vh.iv_a,vh.iv_b,vh.iv_c,vh.iv_d);
         }else {
+            AnalysisUtils.setABCDEnable(true,vh.iv_a,vh.iv_b,vh.iv_c,vh.iv_d);
             switch (bean.select){
                 case 0:
-                    if(bean.answer ==1){
+                    //用户所选是正确的
+                    if (bean.answer == 1){
                         vh.iv_a.setImageResource(R.drawable.exercises_right_icon);
                         vh.iv_b.setImageResource(R.drawable.exercises_b);
                         vh.iv_c.setImageResource(R.drawable.exercises_c);
                         vh.iv_d.setImageResource(R.drawable.exercises_d);
-                    }else if(bean.answer == 2){
-
+                    }else if (bean.answer == 2){
                         vh.iv_a.setImageResource(R.drawable.exercises_a);
                         vh.iv_b.setImageResource(R.drawable.exercises_right_icon);
                         vh.iv_c.setImageResource(R.drawable.exercises_c);
                         vh.iv_d.setImageResource(R.drawable.exercises_d);
-
-                    }else if (bean.answer ==3){
-
-                        vh.iv_a.setImageResource(R.drawable.exercises_a);
+                    }else if (bean.answer == 3){
+                        vh.iv_a.setImageResource(R.drawable.exercises_c);
                         vh.iv_b.setImageResource(R.drawable.exercises_b);
                         vh.iv_c.setImageResource(R.drawable.exercises_right_icon);
                         vh.iv_d.setImageResource(R.drawable.exercises_d);
-                    }else if (bean.answer ==4){
-
+                    }else if (bean.answer == 4){
                         vh.iv_a.setImageResource(R.drawable.exercises_a);
                         vh.iv_b.setImageResource(R.drawable.exercises_b);
                         vh.iv_c.setImageResource(R.drawable.exercises_c);
@@ -117,152 +111,139 @@ public class ExercisesDetailAdapter extends BaseAdapter{
                     }
                     break;
                 case 1:
-                    //cuowu
+                    //用户所选A是错误的
                     vh.iv_a.setImageResource(R.drawable.exercises_error_icon);
-                    if(bean.answer == 2){
+                    if (bean.answer == 2){
                         vh.iv_b.setImageResource(R.drawable.exercises_right_icon);
-
                         vh.iv_c.setImageResource(R.drawable.exercises_c);
                         vh.iv_d.setImageResource(R.drawable.exercises_d);
-
-                    }else if (bean.answer ==3){
-
+                    }else if (bean.answer == 3){
                         vh.iv_b.setImageResource(R.drawable.exercises_b);
                         vh.iv_c.setImageResource(R.drawable.exercises_right_icon);
                         vh.iv_d.setImageResource(R.drawable.exercises_d);
-                    }else if (bean.answer ==4){
-
+                    }else if (bean.answer == 4){
                         vh.iv_b.setImageResource(R.drawable.exercises_b);
                         vh.iv_c.setImageResource(R.drawable.exercises_c);
                         vh.iv_d.setImageResource(R.drawable.exercises_right_icon);
                     }
                     break;
                 case 2:
-                    //cuowu
+                    //用户所选B是错误的
                     vh.iv_b.setImageResource(R.drawable.exercises_error_icon);
-                    if(bean.answer == 2){
+                    if (bean.answer == 1){
                         vh.iv_a.setImageResource(R.drawable.exercises_right_icon);
-
                         vh.iv_c.setImageResource(R.drawable.exercises_c);
                         vh.iv_d.setImageResource(R.drawable.exercises_d);
-
-                    }else if (bean.answer ==3){
+                    }else if (bean.answer == 3){
+                        vh.iv_a.setImageResource(R.drawable.exercises_a);
                         vh.iv_c.setImageResource(R.drawable.exercises_right_icon);
-                        vh.iv_a.setImageResource(R.drawable.exercises_a);
                         vh.iv_d.setImageResource(R.drawable.exercises_d);
-                    }else if (bean.answer ==4){
-                        vh.iv_d.setImageResource(R.drawable.exercises_right_icon);
+                    }else if (bean.answer == 4){
                         vh.iv_a.setImageResource(R.drawable.exercises_a);
                         vh.iv_c.setImageResource(R.drawable.exercises_c);
+                        vh.iv_d.setImageResource(R.drawable.exercises_right_icon);
                     }
                     break;
                 case 3:
-                    //cuowu
+                    //用户所选C是错误的
                     vh.iv_c.setImageResource(R.drawable.exercises_error_icon);
-                    if(bean.answer == 2){
-                        vh.iv_b.setImageResource(R.drawable.exercises_right_icon);
-
-                        vh.iv_a.setImageResource(R.drawable.exercises_a);
-                        vh.iv_d.setImageResource(R.drawable.exercises_d);
-
-                    }else if (bean.answer ==3){
+                    if (bean.answer == 1){
                         vh.iv_a.setImageResource(R.drawable.exercises_right_icon);
                         vh.iv_b.setImageResource(R.drawable.exercises_b);
                         vh.iv_d.setImageResource(R.drawable.exercises_d);
-                    }else if (bean.answer ==4){
-                        vh.iv_d.setImageResource(R.drawable.exercises_right_icon);
-                        vh.iv_b.setImageResource(R.drawable.exercises_b);
+                    }else if (bean.answer == 2){
                         vh.iv_a.setImageResource(R.drawable.exercises_a);
+                        vh.iv_b.setImageResource(R.drawable.exercises_right_icon);
+                        vh.iv_d.setImageResource(R.drawable.exercises_d);
+                    }else if (bean.answer == 4){
+                        vh.iv_a.setImageResource(R.drawable.exercises_a);
+                        vh.iv_b.setImageResource(R.drawable.exercises_b);
+                        vh.iv_d.setImageResource(R.drawable.exercises_right_icon);
                     }
                     break;
                 case 4:
-                    //cuowu
+                    //用户所选D是错误的
                     vh.iv_d.setImageResource(R.drawable.exercises_error_icon);
-                    if(bean.answer == 2){
-                        vh.iv_b.setImageResource(R.drawable.exercises_right_icon);
-
-                        vh.iv_c.setImageResource(R.drawable.exercises_c);
-                        vh.iv_a.setImageResource(R.drawable.exercises_a);
-
-                    }else if (bean.answer ==3){
-                        vh.iv_c.setImageResource(R.drawable.exercises_right_icon);
-                        vh.iv_b.setImageResource(R.drawable.exercises_b);
-                        vh.iv_a.setImageResource(R.drawable.exercises_a);
-                    }else if (bean.answer ==4){
+                    if (bean.answer == 1){
                         vh.iv_a.setImageResource(R.drawable.exercises_right_icon);
                         vh.iv_b.setImageResource(R.drawable.exercises_b);
                         vh.iv_c.setImageResource(R.drawable.exercises_c);
+                    }else if (bean.answer == 2){
+                        vh.iv_a.setImageResource(R.drawable.exercises_a);
+                        vh.iv_b.setImageResource(R.drawable.exercises_right_icon);
+                        vh.iv_c.setImageResource(R.drawable.exercises_c);
+                    }else if (bean.answer == 3){
+                        vh.iv_a.setImageResource(R.drawable.exercises_a);
+                        vh.iv_b.setImageResource(R.drawable.exercises_b);
+                        vh.iv_c.setImageResource(R.drawable.exercises_right_icon);
                     }
                     break;
                 default:
                     break;
             }
         }
-        //当用户点击xuanxiangA的点击事件
+        //当用户点击A选项的点击事件
         vh.iv_a.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view){
-                //判断selectposition是否包含此时的点击的position
-                if (selectedPosition.contains(""+position)){
-                    selectedPosition.remove(""+position);
+            public void onClick(View v) {
+                //判断selectedPosition中是否包含此时点击的position
+                if (selectedPosition.contains("" + position)){
+                    selectedPosition.remove("" + position);
                 }else {
-                    selectedPosition.add(position+"");
+                    selectedPosition.add(position + "");
                 }
                 onSelectListener.onSelectA(position,vh.iv_a,vh.iv_b,vh.iv_c,vh.iv_d);
             }
         });
-        //当用户点击xuanxiangB的点击事件
+        //当用户点击B选项的点击事件
         vh.iv_b.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view){
-                //判断selectposition是否包含此时的点击的position
-                if (selectedPosition.contains(""+position)){
-                    selectedPosition.remove(""+position);
+            public void onClick(View v) {
+                //判断selectedPosition中是否包含此时点击的position
+                if (selectedPosition.contains("" + position)){
+                    selectedPosition.remove("" + position);
                 }else {
-                    selectedPosition.add(position+"");
+                    selectedPosition.add(position + "");
                 }
                 onSelectListener.onSelectB(position,vh.iv_a,vh.iv_b,vh.iv_c,vh.iv_d);
             }
         });
-        //当用户点击xuanxiangC的点击事件
+        //当用户点击C选项的点击事件
         vh.iv_c.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view){
-                //判断selectposition是否包含此时的点击的position
-                if (selectedPosition.contains(""+position)){
-                    selectedPosition.remove(""+position);
+            public void onClick(View v) {
+                //判断selectedPosition中是否包含此时点击的position
+                if (selectedPosition.contains("" + position)){
+                    selectedPosition.remove("" + position);
                 }else {
-                    selectedPosition.add(position+"");
+                    selectedPosition.add(position + "");
                 }
                 onSelectListener.onSelectC(position,vh.iv_a,vh.iv_b,vh.iv_c,vh.iv_d);
             }
         });
-        //当用户点击xuanxiangD的点击事件
+        //当用户点击D选项的点击事件
         vh.iv_d.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view){
-                //判断selectposition是否包含此时的点击的position
-                if (selectedPosition.contains(""+position)){
-                    selectedPosition.remove(""+position);
+            public void onClick(View v) {
+                //判断selectedPosition中是否包含此时点击的position
+                if (selectedPosition.contains("" + position)){
+                    selectedPosition.remove("" + position);
                 }else {
-                    selectedPosition.add(position+"");
+                    selectedPosition.add(position + "");
                 }
                 onSelectListener.onSelectD(position,vh.iv_a,vh.iv_b,vh.iv_c,vh.iv_d);
             }
         });
-
         return convertView;
     }
     class ViewHolder{
         public TextView subject,tv_a,tv_b,tv_c,tv_d;
         public ImageView iv_a,iv_b,iv_c,iv_d;
-
     }
     public interface OnSelectListener{
-        void onSelectA(int position,ImageView iv_a,ImageView iv_b,ImageView iv_c,ImageView iv_d);
-        void onSelectB(int position,ImageView iv_a,ImageView iv_b,ImageView iv_c,ImageView iv_d);
-        void onSelectC(int position,ImageView iv_a,ImageView iv_b,ImageView iv_c,ImageView iv_d);
-        void onSelectD(int position,ImageView iv_a,ImageView iv_b,ImageView iv_c,ImageView iv_d);
-
+        void onSelectA(int position, ImageView iv_a,ImageView iv_b, ImageView iv_c,ImageView iv_d);
+        void onSelectB(int position, ImageView iv_a,ImageView iv_b, ImageView iv_c,ImageView iv_d);
+        void onSelectC(int position, ImageView iv_a,ImageView iv_b, ImageView iv_c,ImageView iv_d);
+        void onSelectD(int position, ImageView iv_a,ImageView iv_b, ImageView iv_c,ImageView iv_d);
     }
 }
