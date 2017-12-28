@@ -28,6 +28,7 @@ public class SplashActivity  extends AppCompatActivity {
         try{
 //            获取程序管理信息
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(),0);
+            tv_version.setText("V"+info.versionName);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             tv_version.setText("V");
