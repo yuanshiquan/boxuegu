@@ -15,6 +15,8 @@ import android.widget.Toast;
 import cn.edu.gdmec.android.boxuegu.R;
 import cn.edu.gdmec.android.boxuegu.utils.MD5Utils;
 
+import static android.R.attr.data;
+
 public class LoginActivity extends AppCompatActivity {
     private TextView tv_main_title;
     private TextView tv_back,tv_register,tv_find_psw;
@@ -81,7 +83,14 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }else if(md5Psw.equals(spPsw)){
                     Toast.makeText(LoginActivity.this,"登录成功",Toast.LENGTH_SHORT).show();
-                    
+                      //保存登录状态
+                    saveLoginStatus(true,userName);
+                    Intent data = new Intent();
+                    data.putExtra("isLogin",true);
+                    setResult(RESULT_OK,data);
+                    LoginActivity.this.finish();
+                    return;
+
                 }else {
                     Toast.makeText(LoginActivity.this,"此用户名不存在",Toast.LENGTH_SHORT).show();
                     return;
@@ -89,9 +98,36 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+    private void saveLoginStatus(boolean status,String userName){
+        //LoginInfo 表示文件名
+        SharedPreferences sp = getSharedPreferences("loginInfo",MODE_PRIVATE);
+        //获取编辑器
+        SharedPreferences.Editor editor  =sp.edit();
+        //保存boolean类型的登录状态
+        editor.putBoolean("isLogin",status);
+        //存入登录时用户名
+        editor.putString("loginUserName",userName);
+        //提交修改
+        editor.commit();
+    }
     //从SharedPreferences根据用户名读取密码
     private  String readPsw(String userName){
         SharedPreferences sp = getSharedPreferences("loginInfo",MODE_PRIVATE);
         return  sp.getString(userName,"");
+    }
+    @Override
+    protected  void onActivityResult(int requestCode, int resultCode ,Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+        if(data!=null){
+            //从注册页面传递过来的用户名
+            String userName = data.getStringExtra("userName");
+            if(!TextUtils.isEmpty(userName)){
+                et_user_name.setText(userName);
+                //设置光标的位置
+                et_user_name.setSelection(userName.length());
+
+            }
+
+        }
     }
 }
