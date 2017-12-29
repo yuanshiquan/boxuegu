@@ -190,3 +190,4 @@ public class ExercisesDetailActivity extends AppCompatActivity{
         lv_list.setAdapter(adapter);
     }
 }
+
