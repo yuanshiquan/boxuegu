@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import cn.edu.gdmec.android.boxuegu.R;
 import cn.edu.gdmec.android.boxuegu.view.ExercisesView;
+import cn.edu.gdmec.android.boxuegu.view.MyInfoView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     //    视图
@@ -39,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tv_back;
     private TextView tv_main_title;
     private RelativeLayout rl_title_bar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,6 +161,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         createView(index);
         setSelectedStatus(index);
     }
+    private MyInfoView mMyInfoView;
+
     //    选择视图
     private void createView(int viewIndex) {
         switch (viewIndex){
@@ -178,6 +180,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case 2:
 //                我的界面
+                if(mMyInfoView == null){
+                    mMyInfoView  =new MyInfoView(this);
+                    mBodyLayout.addView(mMyInfoView.getView());
+
+                }else{
+                    mMyInfoView.getView();
+                }
+                mMyInfoView.showView();
                 break;
         }
     }
