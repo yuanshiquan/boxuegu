@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -18,12 +17,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.edu.gdmec.android.boxuegu.R;
+import cn.edu.gdmec.android.boxuegu.view.CourseView;
 import cn.edu.gdmec.android.boxuegu.view.ExercisesView;
 import cn.edu.gdmec.android.boxuegu.view.MyInfoView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-
+    private CourseView mCourseView;
     //    视图
     private ExercisesView mExercisesView;
     //    中间内容栏
@@ -171,6 +171,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void createView(int viewIndex) {
         switch (viewIndex){
             case 0:
+                if (mCourseView == null){
+                    mCourseView = new CourseView(this);
+                    mBodyLayout.addView(mCourseView.getView());
+                }else {
+                    mCourseView.getView();
+                }
+                mCourseView.showView();
 //                课程界面
                 break;
             case 1:

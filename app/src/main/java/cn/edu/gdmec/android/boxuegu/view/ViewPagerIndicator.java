@@ -1,11 +1,10 @@
 package cn.edu.gdmec.android.boxuegu.view;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.util.AttributeSet;
 
 import cn.edu.gdmec.android.boxuegu.R;
 
@@ -23,6 +22,7 @@ public class ViewPagerIndicator extends LinearLayout {
     public ViewPagerIndicator(Context context,AttributeSet attrs){
         super(context,attrs);
         setGravity(Gravity.CENTER);
+        this.context=context;
     }
     public void setCurrentPosition(int currentIndex){
         mIndex = currentIndex;
@@ -39,7 +39,9 @@ public class ViewPagerIndicator extends LinearLayout {
             addView(imageView);
         }
     }
-    public  void setmCount(int count){
+    public  void setCount(int count){
         this.mCount = count;
     }
+
+
 }
