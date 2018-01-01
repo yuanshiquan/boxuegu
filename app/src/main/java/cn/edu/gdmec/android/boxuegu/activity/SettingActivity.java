@@ -51,12 +51,15 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //跳转设置密保界面
+                Intent intent = new Intent( SettingActivity.this,FindPswActivity.class);
+                intent.putExtra("from","security");
+                startActivity(intent);
             }
         });
         rl_exit_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(SettingActivity.this,"退出登录成功",Toast.LENGTH_SHORT).show();;
+                Toast.makeText(SettingActivity.this,"退出登录成功",Toast.LENGTH_SHORT).show();
                 clearLoginStatus();
                 //退出登录成功后吧状态传递给MainActivity中
                 Intent data = new Intent();
