@@ -1,10 +1,13 @@
 package cn.edu.gdmec.android.boxuegu.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -28,18 +31,30 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     private TextView tv_main_title;
     private RelativeLayout rl_title_bar;
     private String spUserName;
+    private static  final int  CHANGE_NICKNAME = 1;//修改昵称的自定义常量
+    private static  final int  CHANGE_SIGNATURE = 2;//修改签名的自定义常量
+    private String new_info;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
+        //设置界面为竖屏
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         spUserName = AnalysisUtils.readLoginUserName(this);
         init();
         initData();
         setListener();
     }
 
+//自定义跳转方法
+    private void enterActivityForResult(Class<?> to,int requestCode,Bundle b){
+        Intent i = new Intent(this,to);
+        i.putExtras(b);
+        startActivityForResult(i,requestCode);
+
+    }
     private void setListener() {
         tv_back.setOnClickListener(this);
        rl_nickName.setOnClickListener(this);
@@ -95,19 +110,67 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 this.finish();
                 break;
             case R.id.rl_nickName://呢称的点击事件
-               
+               String name = tv_nickName.getText().toString();//获取昵称控件上的数据
+                Bundle bdName = new Bundle();
+                bdName.putString("content",name);//传递界面上的昵称数据
+                bdName.putString("title","昵称");//传递界面的标题
+                bdName.putInt("flag",1);//flag 传递1表示是昵称
+                enterActivityForResult(ChangUserInfoActivity.class,CHANGE_NICKNAME,bdName);
                 break;
             case R.id.rl_sex:
                 String sex = tv_sex.getText().toString();
                 sexDialog(sex);
                 break;
             case R.id.rl_signature: //签名的点击事件
+                String signature = tv_signature.getText().toString();//获取昵称控件上的数据
+                Bundle bdSignature = new Bundle();
+                bdSignature.putString("content",signature);//传递界面上的签名数据
+                bdSignature.putString("title","签名");//传递界面的标题
+                bdSignature.putInt("flag",2);//flag 传递2表示是签名
+                enterActivityForResult(ChangUserInfoActivity.class,CHANGE_SIGNATURE,bdSignature);
                 break;
-
             default:
                 break;
         }
     }
+
+    @Override
+    protected  void  onActivityResult(int requestCode,int resultCode,Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+        switch (requestCode){
+            case CHANGE_NICKNAME:
+
+                if(data!=null){
+                    new_info = data.getStringExtra("nickName");//从个人资料界面回传过来的数据
+                    if(TextUtils.isEmpty(new_info)||new_info==null){
+                        return;
+                    }
+                    tv_nickName.setText(new_info);
+                    //更新数据库中的呢称字段
+                    DBUtils.getInstance(UserInfoActivity.this).updateUserInfo("nickName", new_info,spUserName);
+
+                }
+
+                break;
+            case CHANGE_SIGNATURE:
+
+                if(data!=null){
+                    new_info = data.getStringExtra("signature");//从个人资料界面回传过来的数据
+                    if(TextUtils.isEmpty(new_info)||new_info==null){
+                        return;
+                    }
+                    tv_signature.setText(new_info);
+                    //更新数据库中的签名字段
+                    DBUtils.getInstance(UserInfoActivity.this).updateUserInfo("signature", new_info,spUserName);
+
+                }
+
+                break;
+        }
+
+    }
+
+
   //修改性别的弹出框
     private void sexDialog(String sex) {
         int sexFlag = 0;
