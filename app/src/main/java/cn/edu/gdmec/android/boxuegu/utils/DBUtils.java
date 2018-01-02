@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import cn.edu.gdmec.android.boxuegu.bean.UserBean;
+import cn.edu.gdmec.android.boxuegu.bean.VideoBean;
 import cn.edu.gdmec.android.boxuegu.sqllite.SQLiteHelper;
 
 
@@ -67,4 +68,44 @@ public class DBUtils {
     }
 
 
+    public void saveVideoPlayList(VideoBean bean, String userName) {
+        if (hasVideooPlay(bean.chapterId, bean.chapterId,userName)){
+            boolean isDelete = delVideoPlay(bean.chapterId,bean.videoId,userName);
+            if (!isDelete){
+                return;
+            }
+        }
+        ContentValues cv = new ContentValues();
+        cv.put("userName", userName);
+        cv.put("chapterId", bean.chapterId);
+        cv.put("videoId", bean.videoId);
+        cv.put("videoPath", bean.videoPath);
+        cv.put("title", bean.title);
+        cv.put("secondTitle", bean.secondTitle);
+        db.insert(SQLiteHelper.U_VIDEO_PLAY_LIST, null, cv);
+    }
+
+    private boolean delVideoPlay(int chapterId, int videoId, String userName) {
+        boolean delSuccess = false;
+        int row = db.delete(SQLiteHelper.U_VIDEO_PLAY_LIST,"chapterId=? AND videoId = ? AND userName = ? ",new String[]{
+         chapterId+"",videoId+"",userName
+        });
+        if (row > 0){
+            delSuccess = true;
+
+        }
+        return delSuccess;
+    }
+
+    private boolean hasVideooPlay(int chapterId, int videoId, String userName) {
+        boolean hasVideo = false;
+        String sql = "SELECT * FROM " + SQLiteHelper.U_VIDEO_PLAY_LIST + " WHERE chapterId= ? And userName=?";
+        Cursor cursor = db.rawQuery(sql, new String[]{chapterId+"",videoId+"",userName});
+        if (cursor.moveToFirst()){
+            hasVideo = true;
+        }
+        cursor.close();
+        return hasVideo;
+
+    }
 }
