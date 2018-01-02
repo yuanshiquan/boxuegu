@@ -79,7 +79,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         }
         setValue(bean);
     }
-   //为界面空间设置值
+   //为界面控件设置值
     public void setValue(UserBean bean) {
         tv_nickName.setText(bean.nickName);
         tv_sex.setText(bean.sex);
@@ -102,10 +102,10 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 sexDialog(sex);
                 break;
             case R.id.rl_signature: //签名的点击事件
-                String signature = tv_sex.getText().toString();
                 break;
 
-
+            default:
+                break;
         }
     }
   //修改性别的弹出框
