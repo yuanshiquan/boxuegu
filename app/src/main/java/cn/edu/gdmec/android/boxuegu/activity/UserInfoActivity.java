@@ -134,9 +134,10 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 bdSignature.putInt("flag",2);//flag 传递2表示是签名
                 enterActivityForResult(ChangUserInfoActivity.class,CHANGE_SIGNATURE,bdSignature);
                 break;
-            case R.id.iv_head_icon:
-                Intent intent = new Intent(UserInfoActivity.this, SelectTouxiangActivity.class);
-                 startActivity(intent);
+//            case R.id.iv_head_icon:
+//                Intent intent = new Intent(UserInfoActivity.this, SelectTouxiangActivity.class);
+//                 startActivity(intent);
+//                break;
             default:
                 break;
         }
