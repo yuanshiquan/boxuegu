@@ -1,5 +1,6 @@
 package cn.edu.gdmec.android.boxuegu.activity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -9,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +37,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     private static  final int  CHANGE_NICKNAME = 1;//修改昵称的自定义常量
     private static  final int  CHANGE_SIGNATURE = 2;//修改签名的自定义常量
     private String new_info;
+    private ImageView iv_head_icon;
 
 
     @Override
@@ -60,7 +64,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
        rl_nickName.setOnClickListener(this);
         rl_sex.setOnClickListener(this);
         rl_signature.setOnClickListener(this);
-
+       iv_head_icon.setOnClickListener(this);
     }
 
     private void init() {
@@ -76,6 +80,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         rl_signature = (RelativeLayout) findViewById(R.id.rl_signature);
         tv_signature = (TextView) findViewById(R.id.tv_signature);
         tv_user_name = (TextView) findViewById(R.id.tv_user_name);
+        iv_head_icon = (ImageView) findViewById(R.id.iv_head_icon);
 
     }
     //从数据库中获取数据
@@ -129,6 +134,9 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 bdSignature.putInt("flag",2);//flag 传递2表示是签名
                 enterActivityForResult(ChangUserInfoActivity.class,CHANGE_SIGNATURE,bdSignature);
                 break;
+            case R.id.iv_head_icon:
+                Intent intent = new Intent(UserInfoActivity.this, SelectTouxiangActivity.class);
+                 startActivity(intent);
             default:
                 break;
         }

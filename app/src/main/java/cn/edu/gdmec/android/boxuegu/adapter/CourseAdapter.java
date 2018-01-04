@@ -1,17 +1,21 @@
 package cn.edu.gdmec.android.boxuegu.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import cn.edu.gdmec.android.boxuegu.R;
+import cn.edu.gdmec.android.boxuegu.activity.LoginActivity;
 import cn.edu.gdmec.android.boxuegu.activity.VideoListActivity;
 import cn.edu.gdmec.android.boxuegu.bean.CourseBean;
 
@@ -78,13 +82,22 @@ public class CourseAdapter extends BaseAdapter {
                         vh.tv_left_title.setText(bean.title);
                         setLeftImg(bean.id,vh.iv_left_img);
                         vh.iv_left_img.setOnClickListener(new View.OnClickListener(){
+
                             @Override
                             public void onClick(View voew){
-                                Intent intent = new Intent(context, VideoListActivity.class);
-                                intent.putExtra ( "id", bean.id );
-                                intent.putExtra ( "intro", bean.intro );
-                                context.startActivity(intent);
-                                //跳转到课程详情界面
+                                if(readLoginStatus()) {
+
+                                    Intent intent = new Intent(context, VideoListActivity.class);
+                                    intent.putExtra("id", bean.id);
+                                    intent.putExtra("intro", bean.intro);
+                                    context.startActivity(intent);
+                                    //跳转到课程详情界面
+                                }else{
+                                    Toast.makeText(context,"您还未登录，请先登录",Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(context, LoginActivity.class);
+                                    //带回用户名
+                                    ((Activity) context).startActivityForResult(intent,1);
+                                }
                             }
                         });
                         break;
@@ -153,5 +166,10 @@ public class CourseAdapter extends BaseAdapter {
     class ViewHolder{
         public TextView tv_left_img_title,tv_left_title,tv_right_img_title,tv_right_title;
         public ImageView iv_left_img,iv_right_img;
+    }
+    private boolean readLoginStatus(){
+        SharedPreferences sp = context.getSharedPreferences("loginInfo",Context.MODE_PRIVATE);
+        boolean isLogin = sp.getBoolean("isLogin",false);
+        return isLogin;
     }
 }

@@ -72,7 +72,7 @@
         />
     <Button
         android:id="@+id/btn_register"
-        android:text="注册"
+        android:text="注 册"
         android:layout_gravity="center_horizontal"
         android:layout_width="fill_parent"
         android:layout_height="40dp"

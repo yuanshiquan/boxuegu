@@ -44,12 +44,19 @@ public class VideoPlayActivity extends AppCompatActivity{
         if (TextUtils.isEmpty ( videoPath )){
             Toast.makeText ( this, "本地没有此视频，暂无法播放", Toast.LENGTH_SHORT ).show ();
             return;
+        }else if(position==0){
+            //Videoview无法直接读取assets中的文件，可以访问res中的文件，以资源id方式引用文件
+            //所以需要通过文件名称获取资源id的方法，资源文件名称不能有后缀名。
+            String uri = "android.resource://" + getPackageName () + "/" + R.raw.video11;
+            videoView.setVideoPath (uri);
+            videoView.start ();
+        }else if(position==1){
+            String uri = "android.resource://" + getPackageName () + "/" + R.raw.beyond;
+            videoView.setVideoPath (uri);
+            videoView.start ();
         }
-        //Videoview无法直接读取assets中的文件，可以访问res中的文件，以资源id方式引用文件
-        //所以需要通过文件名称获取资源id的方法，资源文件名称不能有后缀名。
-        String uri = "android.resource://" + getPackageName () + "/" + R.raw.video11;
-        videoView.setVideoPath ( uri );
-        videoView.start ();
+
+
     }
     //点击后退键
     @Override

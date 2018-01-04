@@ -1,17 +1,21 @@
 package cn.edu.gdmec.android.boxuegu.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import cn.edu.gdmec.android.boxuegu.R;
 import cn.edu.gdmec.android.boxuegu.activity.ExercisesDetailActivity;
+import cn.edu.gdmec.android.boxuegu.activity.LoginActivity;
 import cn.edu.gdmec.android.boxuegu.bean.ExercisesBean;
 
 public class ExercisesAdapter extends BaseAdapter{
@@ -67,15 +71,23 @@ public class ExercisesAdapter extends BaseAdapter{
         convertView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                if (bean == null)
-                    return;
-                //跳转到习题详情页面
-                Intent intent = new Intent(mContext, ExercisesDetailActivity.class);
-                //把章节id传递到习题详情页面
-                intent.putExtra("id",bean.id);
-                //把标题传递到习题详情页面
-                intent.putExtra("title",bean.title);
-                mContext.startActivity(intent);
+                if(readLoginStatus()){
+                    if (bean == null)
+                        return;
+                    //跳转到习题详情页面
+                    Intent intent = new Intent(mContext, ExercisesDetailActivity.class);
+                    //把章节id传递到习题详情页面
+                    intent.putExtra("id",bean.id);
+                    //把标题传递到习题详情页面
+                    intent.putExtra("title",bean.title);
+                    mContext.startActivity(intent);
+                }else {
+                    Toast.makeText(mContext,"您还未登录，请先登录",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(mContext, LoginActivity.class);
+                    //带回用户名
+                    ((Activity) mContext).startActivityForResult(intent,1);
+                }
+
             }
         });
         return convertView;
@@ -83,5 +95,10 @@ public class ExercisesAdapter extends BaseAdapter{
     class ViewHolder{
         public TextView title,content;
         public TextView order;
+    }
+    private boolean readLoginStatus(){
+        SharedPreferences sp = mContext.getSharedPreferences("loginInfo",Context.MODE_PRIVATE);
+        boolean isLogin = sp.getBoolean("isLogin",false);
+        return isLogin;
     }
 }
